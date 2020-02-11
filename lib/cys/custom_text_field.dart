@@ -1483,7 +1483,7 @@ class _CustomTextFieldState extends State<CustomTextField>
         showSelectionHandles: _showSelectionHandles,
         // 控制器
         controller: controller,
-        // 聚焦节��
+        // 聚焦节点
         focusNode: focusNode,
         // 键盘类型
         keyboardType: widget.keyboardType,
@@ -1533,7 +1533,7 @@ class _CustomTextFieldState extends State<CustomTextField>
         onSelectionHandleTapped: _handleSelectionHandleTapped,
         // 输入格式化程序
         inputFormatters: formatters,
-        // 渲染器签名
+        // 渲染器忽略指针
         rendererIgnoresPointer: true,
         // 光标宽度
         cursorWidth: widget.cursorWidth,

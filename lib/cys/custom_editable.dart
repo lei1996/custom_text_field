@@ -414,7 +414,7 @@ class RenderEditable extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
   ///
   /// The default value of this property is false.
   ///
-  /// 此属性的默认���������������为false。
+  /// 此属性的默认值为false。
   bool ignorePointer;
 
   /// {@macro flutter.widgets.text.DefaultTextStyle.textWidthBasis}
@@ -547,24 +547,26 @@ class RenderEditable extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
         .contains(endOffset + effectiveOffset);
   }
 
-  // Holds the last cursor location the user selected in the case the user tries
-  // to select vertically past the end or beginning of the field. If they do,
-  // then we need to keep the old cursor location so that we can go back to it
-  // if they change their minds. Only used for moving selection up and down in a
-  // multiline text field when selecting using the keyboard.
-  // 当用户试图在轴向的结束或开始处，垂直选择时，保留用户选择的最后一个光标位置。
-  // 如果他们这样做了，那么我们需要保留旧的光标位置，这样，如果他们改变主意，
-  // 我们就可以回到原来的位置。仅用于在使用键盘进行选择时在多行文本相邻中上下移动所选内容。
+  /// Holds the last cursor location the user selected in the case the user tries
+  /// to select vertically past the end or beginning of the field. If they do,
+  /// then we need to keep the old cursor location so that we can go back to it
+  /// if they change their minds. Only used for moving selection up and down in a
+  /// multiline text field when selecting using the keyboard.
+  /// 
+  /// 当用户试图在轴向的结束或开始处，垂直选择时，保留用户选择的最后一个光标位置。
+  /// 如果他们这样做了，那么我们需要保留旧的光标位置，这样，如果他们改变主意，
+  /// 我们就可以回到原来的位置。仅用于在使用键盘进行选择时在多行文本相邻中上下移动所选内容。
   int _cursorResetLocation = -1;
 
-  // Whether we should reset the location of the cursor in the case the user
-  // tries to select vertically past the end or beginning of the field. If they
-  // do, then we need to keep the old cursor location so that we can go back to
-  // it if they change their minds. Only used for resetting selection up and
-  // down in a multiline text field when selecting using the keyboard.
-  // 如果用户试图垂直选择超过分段的结束或开始，我们是否应该重置光标的位置。
-  // 如果他们初始化了，那么我们需要保留旧的光标位置，这样，如果他们改变主意，
-  // 我们就可以回到原来的位置。仅用于在使用键盘进行选择时在多行文本分段中上下重置选择。
+  /// Whether we should reset the location of the cursor in the case the user
+  /// tries to select vertically past the end or beginning of the field. If they
+  /// do, then we need to keep the old cursor location so that we can go back to
+  /// it if they change their minds. Only used for resetting selection up and
+  /// down in a multiline text field when selecting using the keyboard.
+  /// 
+  /// 如果用户试图垂直选择超过分段的结束或开始，我们是否应该重置光标的位置。
+  /// 如果他们初始化了，那么我们需要保留旧的光标位置，这样，如果他们改变主意，
+  /// 我们就可以回到原来的位置。仅用于在使用键盘进行选择时在多行文本分段中上下重置选择。
   bool _wasSelectingVerticallyWithKeyboard = false;
 
   // Call through to onSelectionChanged.
@@ -577,7 +579,7 @@ class RenderEditable extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
     // changed. Also, focusing an empty field is sent as a selection change even
     // if the selection offset didn't change.
     // 键盘所做的更改有时可能是监听组件的“带外”更改，因此始终发送这些事件，即使我们认为它没有更改。
-    // 此外，�������使选择偏移量没有改变，聚焦一个空字段也会作为选择更改发送。
+    // 此外，即使选择偏移量没有改变，聚焦一个空字段也会作为选择更改发送。
     final bool focusingEmpty = nextSelection.baseOffset == 0 &&
         nextSelection.extentOffset == 0 &&
         !hasFocus;
