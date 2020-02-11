@@ -303,14 +303,17 @@ class _TextFieldSelectionGestureDetectorBuilder
 ///  * <https://material.io/design/components/text-fields.html>
 ///  * [TextFormField], which integrates with the [Form] widget.
 ///  * [TextFormField]，它与[Form]小部件集成。
+/// 
 ///  * [InputDecorator], which shows the labels and other visual elements that
 ///    surround the actual text editing widget.
 ///  * [InputDecorator]，它显示实际文本编辑小部件周围的标签和其他视觉元素。
+/// 
 ///  * [EditableText], which is the raw text editing control at the heart of a
 ///    [TextField]. The [EditableText] widget is rarely used directly unless
 ///    you are implementing an entirely different design language, such as
 ///    Cupertino.
 ///  * [可编辑文本]，这是位于[文本字段]中心的原始文本编辑控件。除非实现完全不同的设计语言，例如Cupertino，[EditableText]小部件很少直接使用。
+/// 
 ///  * Learn how to use a [TextEditingController] in one of our
 ///    [cookbook recipe](https://flutter.dev/docs/cookbook/forms/text-field-changes#2-use-a-texteditingcontroller)s.
 ///  * 了解如何在[食谱]中使用[文本编辑控制器] (https://flutter.dev/docs/cookbook/forms/text-field-changes#2-use-a-texteditingcontroller)s.
@@ -813,6 +816,7 @@ class CustomTextField extends StatefulWidget {
   ///  * [inputFormatters], which are called before [onChanged]
   ///    runs and can validate and change ("format") the input value.
   ///  * [inputFormatters]，在[onChanged]运行之前调用，可以验证和更改 ("format") 输入值。
+  /// 
   ///  * [onEditingComplete], [onSubmitted], [onSelectionChanged]:
   ///    which are more specialized input change notifications.
   ///  * [onEditingComplete], [onSubmitted], [onSelectionChanged]: 
@@ -831,7 +835,9 @@ class CustomTextField extends StatefulWidget {
   ///  * [EditableText.onSubmitted] for an example of how to handle moving to
   ///    the next/previous field when using [TextInputAction.next] and
   ///    [TextInputAction.previous] for [textInputAction].
-  ///  * [EditableText.onSubmitted]举例说明如何处理在为[TextInputAction]使用[TextInputAction.next]和[TextInputAction.previous]时移动到下一个/上一个字段。
+  ///  * [EditableText.onSubmitted]举例说明如何处理在为[TextInputAction]使用
+  ///    [TextInputAction.next]和[TextInputAction.previous]时移动到下一个/上一个字段。
+  /// 
   /// 提交
   final ValueChanged<String> onSubmitted;
 
@@ -1162,7 +1168,7 @@ class _CustomTextFieldState extends State<CustomTextField>
     final int currentLength = _currentLength;
     // 有效装饰 计数器
     if (effectiveDecoration.counter == null &&
-        // 有效装饰 计数器文本Î
+        // 有效装饰 计数器文本
         effectiveDecoration.counterText == null &&
         // 构建计数器
         widget.buildCounter != null) {
@@ -1187,7 +1193,7 @@ class _CustomTextFieldState extends State<CustomTextField>
           container: true,
           // 活动区域： 是否聚焦
           liveRegion: isFocused,
-          // 子类: 内��计数器
+          // 子类: 内建计数器
           child: builtCounter,
         );
       }
@@ -1196,7 +1202,7 @@ class _CustomTextFieldState extends State<CustomTextField>
     }
 
     if (widget.maxLength == null)
-      // 有效装饰
+      // 返回没有计数器的widget
       return effectiveDecoration; // No counter widget
 
     // 计数器文本: 当前长度
@@ -1246,6 +1252,7 @@ class _CustomTextFieldState extends State<CustomTextField>
   @override
   void initState() {
     super.initState();
+    print(this);
     // 选择手势检测器生成器
     _selectionGestureDetectorBuilder =
         // 文本字段选择手势检测器生成器
@@ -1468,7 +1475,7 @@ class _CustomTextFieldState extends State<CustomTextField>
         key: editableTextKey,
         // 只读
         readOnly: widget.readOnly,
-        // ��具栏选项
+        // 工具栏选项
         toolbarOptions: widget.toolbarOptions,
         // 显示光标
         showCursor: widget.showCursor,
