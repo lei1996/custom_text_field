@@ -1394,7 +1394,7 @@ class RenderEditable extends RenderBox with RelayoutWhenSystemFontsChangeMixin {
   ///
   /// Defaults to a padding with left, top and right set to 4, bottom to 5.
   ///
-  /// 默认设置为"左"、"上"和"右"分别设置为4 "下"为 5 的���边距。
+  /// 默认设置为"左"、"上"和"右"分别设置为4 "下"为 5 的内边距。
   EdgeInsets get floatingCursorAddedMargin => _floatingCursorAddedMargin;
   EdgeInsets _floatingCursorAddedMargin;
   set floatingCursorAddedMargin(EdgeInsets value) {
