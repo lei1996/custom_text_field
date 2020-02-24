@@ -14,21 +14,21 @@ class _CyTextFieldState extends State<CyTextField> {
     return Center(
       child: CustomTextField(
         controller: _messageController,
-        textCapitalization: TextCapitalization.sentences,
-        textInputAction: TextInputAction.done,
-        onSubmitted: (_) {
-          if (_messageController.text.isEmpty) return;
-          // _sendMessage(
-          //   to: widget.id,
-          //   type: 'text',
-          //   content: _messageController.text,
-          // );
-          _messageController.text = '';
-        },
-        // collapsed 去除input 下面的线
-        decoration: InputDecoration.collapsed(
-          hintText: '代码写完了吗?',
-        ),
+        // textCapitalization: TextCapitalization.sentences,
+        // textInputAction: TextInputAction.done,
+        // onSubmitted: (_) {
+        //   if (_messageController.text.isEmpty) return;
+        //   // _sendMessage(
+        //   //   to: widget.id,
+        //   //   type: 'text',
+        //   //   content: _messageController.text,
+        //   // );
+        //   _messageController.text = '';
+        // },
+        // // collapsed 去除input 下面的线
+        // decoration: InputDecoration.collapsed(
+        //   hintText: '代码写完了吗?',
+        // ),
       ),
     );
   }

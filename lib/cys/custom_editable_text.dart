@@ -14,6 +14,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/gestures.dart' show DragStartBehavior;
 
+import './custom_editable.dart';
+
 // import 'automatic_keep_alive.dart';
 // import 'basic.dart';
 // import 'binding.dart';
@@ -153,145 +155,145 @@ const int _kObscureShowLatestCharCursorTicks = 3;
 ///  *了解如何在我们的[食谱]中使用[文本编辑控制器]（https://flutter.dev/docs/cookbook/forms/text field changes#2-use-a-textedittingcontroller）
 
 // 文本编辑控制器  继承了 ValueNotifier泛型 里面传入 TextEditingValue
-class TextEditingController extends ValueNotifier<TextEditingValue> {
-  /// Creates a controller for an editable text field.
-  /// 为可编辑文本字段创建控制器。
-  ///
-  /// This constructor treats a null [text] argument as if it were the empty
-  /// string.
-  /// 此构造函数将空[文本]参数视为空字符串。
-  TextEditingController({String text})
-      : super(text == null
-            ? TextEditingValue.empty
-            : TextEditingValue(text: text));
+// class TextEditingController extends ValueNotifier<TextEditingValue> {
+//   /// Creates a controller for an editable text field.
+//   /// 为可编辑文本字段创建控制器。
+//   ///
+//   /// This constructor treats a null [text] argument as if it were the empty
+//   /// string.
+//   /// 此构造函数将空[文本]参数视为空字符串。
+//   TextEditingController({String text})
+//       : super(text == null
+//             ? TextEditingValue.empty
+//             : TextEditingValue(text: text));
 
-  /// Creates a controller for an editable text field from an initial [TextEditingValue].
-  /// 从初始[TextEditingValue]为可编辑文本字段创建控制器。
-  ///
-  /// This constructor treats a null [value] argument as if it were
-  /// [TextEditingValue.empty].
-  /// 此构造函数将空的[value]参数视为[TextEditingValue.empty]。
-  TextEditingController.fromValue(TextEditingValue value)
-      : super(value ?? TextEditingValue.empty);
+//   /// Creates a controller for an editable text field from an initial [TextEditingValue].
+//   /// 从初始[TextEditingValue]为可编辑文本字段创建控制器。
+//   ///
+//   /// This constructor treats a null [value] argument as if it were
+//   /// [TextEditingValue.empty].
+//   /// 此构造函数将空的[value]参数视为[TextEditingValue.empty]。
+//   TextEditingController.fromValue(TextEditingValue value)
+//       : super(value ?? TextEditingValue.empty);
 
-  /// The current string the user is editing.
-  /// 用户正在编辑的当前字符串。
-  String get text => value.text;
+//   /// The current string the user is editing.
+//   /// 用户正在编辑的当前字符串。
+//   String get text => value.text;
 
-  /// Setting this will notify all the listeners of this [TextEditingController]
-  /// that they need to update (it calls [notifyListeners]). For this reason,
-  /// this value should only be set between frames, e.g. in response to user
-  /// actions, not during the build, layout, or paint phases.
-  /// 设置此项将通知此[TextEditingController]的所有侦听器它们需要更新（它调用[notifyListeners]）。
-  /// 因此，该值只应在帧之间设置，例如响应用户操作，而不应在构建、布局或绘制阶段设置。
-  ///
-  /// This property can be set from a listener added to this
-  /// [TextEditingController]; however, one should not also set [selection]
-  /// in a separate statement. To change both the [text] and the [selection]
-  /// change the controller's [value].
-  /// 此属性可以从添加到此[TextEditingController]的侦听器设置；
-  /// 但是，也不应在单独的语句中设置[selection]。
-  /// 要同时更改[文本]和[选择]，请更改控制器的[值]。
-  set text(String newText) {
-    value = value.copyWith(
-      text: newText,
-      selection: const TextSelection.collapsed(offset: -1),
-      composing: TextRange.empty,
-    );
-  }
+//   /// Setting this will notify all the listeners of this [TextEditingController]
+//   /// that they need to update (it calls [notifyListeners]). For this reason,
+//   /// this value should only be set between frames, e.g. in response to user
+//   /// actions, not during the build, layout, or paint phases.
+//   /// 设置此项将通知此[TextEditingController]的所有侦听器它们需要更新（它调用[notifyListeners]）。
+//   /// 因此，该值只应在帧之间设置，例如响应用户操作，而不应在构建、布局或绘制阶段设置。
+//   ///
+//   /// This property can be set from a listener added to this
+//   /// [TextEditingController]; however, one should not also set [selection]
+//   /// in a separate statement. To change both the [text] and the [selection]
+//   /// change the controller's [value].
+//   /// 此属性可以从添加到此[TextEditingController]的侦听器设置；
+//   /// 但是，也不应在单独的语句中设置[selection]。
+//   /// 要同时更改[文本]和[选择]，请更改控制器的[值]。
+//   set text(String newText) {
+//     value = value.copyWith(
+//       text: newText,
+//       selection: const TextSelection.collapsed(offset: -1),
+//       composing: TextRange.empty,
+//     );
+//   }
 
-  /// Builds [TextSpan] from current editing value.
-  /// 从当前编辑值生成[TextSpan]。
-  ///
-  /// By default makes text in composing range appear as underlined.
-  /// Descendants can override this method to customize appearance of text.
-  /// 默认情况下，使组成范围内的文本显示为下划线。
-  /// 子体可以重写此方法以自定义文本的外观。
-  TextSpan buildTextSpan({TextStyle style, bool withComposing}) {
-    if (!value.composing.isValid || !withComposing) {
-      return TextSpan(style: style, text: text);
-    }
-    final TextStyle composingStyle = style.merge(
-      // underline: 下划线
-      const TextStyle(decoration: TextDecoration.underline),
-    );
-    return TextSpan(style: style, children: <TextSpan>[
-      // 之前的文本
-      TextSpan(text: value.composing.textBefore(value.text)),
-      // 文本内部
-      TextSpan(
-        style: composingStyle,
-        text: value.composing.textInside(value.text),
-      ),
-      // 之后的文本
-      TextSpan(text: value.composing.textAfter(value.text)),
-    ]);
-  }
+//   /// Builds [TextSpan] from current editing value.
+//   /// 从当前编辑值生成[TextSpan]。
+//   ///
+//   /// By default makes text in composing range appear as underlined.
+//   /// Descendants can override this method to customize appearance of text.
+//   /// 默认情况下，使组成范围内的文本显示为下划线。
+//   /// 子体可以重写此方法以自定义文本的外观。
+//   TextSpan buildTextSpan({TextStyle style, bool withComposing}) {
+//     if (!value.composing.isValid || !withComposing) {
+//       return TextSpan(style: style, text: text);
+//     }
+//     final TextStyle composingStyle = style.merge(
+//       // underline: 下划线
+//       const TextStyle(decoration: TextDecoration.underline),
+//     );
+//     return TextSpan(style: style, children: <TextSpan>[
+//       // 之前的文本
+//       TextSpan(text: value.composing.textBefore(value.text)),
+//       // 文本内部
+//       TextSpan(
+//         style: composingStyle,
+//         text: value.composing.textInside(value.text),
+//       ),
+//       // 之后的文本
+//       TextSpan(text: value.composing.textAfter(value.text)),
+//     ]);
+//   }
 
-  /// The currently selected [text].
-  /// 当前选定的[文本]。
-  ///
-  /// If the selection is collapsed, then this property gives the offset of the
-  /// cursor within the text.
-  /// 如果所选内容已折叠，则此属性提供文本中光标的偏移量。
-  TextSelection get selection => value.selection;
+//   /// The currently selected [text].
+//   /// 当前选定的[文本]。
+//   ///
+//   /// If the selection is collapsed, then this property gives the offset of the
+//   /// cursor within the text.
+//   /// 如果所选内容已折叠，则此属性提供文本中光标的偏移量。
+//   TextSelection get selection => value.selection;
 
-  /// Setting this will notify all the listeners of this [TextEditingController]
-  /// that they need to update (it calls [notifyListeners]). For this reason,
-  /// this value should only be set between frames, e.g. in response to user
-  /// actions, not during the build, layout, or paint phases.
-  /// 设置此项将通知此[TextEditingController]的所有侦听器它们需要更新（它调用[notifyListeners]）。
-  /// 因此，该值只应在帧之间设置，例如响应用户操作，而不应在构建、布局或绘制阶段设置。
-  ///
-  /// This property can be set from a listener added to this
-  /// [TextEditingController]; however, one should not also set [text]
-  /// in a separate statement. To change both the [text] and the [selection]
-  /// change the controller's [value].
-  /// 可以从添加到此[TextEditingController]的侦听器设置此属性；
-  /// 但是，也不应在单独的语句中设置[text]。要同时更改[文本]和[选择]，请更改控制器的[值]。
-  set selection(TextSelection newSelection) {
-    if (newSelection.start > text.length || newSelection.end > text.length)
-      throw FlutterError.fromParts(<DiagnosticsNode>[
-        ErrorSummary('invalid text selection: $newSelection')
-      ]);
-    value = value.copyWith(selection: newSelection, composing: TextRange.empty);
-  }
+//   /// Setting this will notify all the listeners of this [TextEditingController]
+//   /// that they need to update (it calls [notifyListeners]). For this reason,
+//   /// this value should only be set between frames, e.g. in response to user
+//   /// actions, not during the build, layout, or paint phases.
+//   /// 设置此项将通知此[TextEditingController]的所有侦听器它们需要更新（它调用[notifyListeners]）。
+//   /// 因此，该值只应在帧之间设置，例如响应用户操作，而不应在构建、布局或绘制阶段设置。
+//   ///
+//   /// This property can be set from a listener added to this
+//   /// [TextEditingController]; however, one should not also set [text]
+//   /// in a separate statement. To change both the [text] and the [selection]
+//   /// change the controller's [value].
+//   /// 可以从添加到此[TextEditingController]的侦听器设置此属性；
+//   /// 但是，也不应在单独的语句中设置[text]。要同时更改[文本]和[选择]，请更改控制器的[值]。
+//   set selection(TextSelection newSelection) {
+//     if (newSelection.start > text.length || newSelection.end > text.length)
+//       throw FlutterError.fromParts(<DiagnosticsNode>[
+//         ErrorSummary('invalid text selection: $newSelection')
+//       ]);
+//     value = value.copyWith(selection: newSelection, composing: TextRange.empty);
+//   }
 
-  /// Set the [value] to empty.
-  /// 将[值]设置为空。
-  ///
-  /// After calling this function, [text] will be the empty string and the
-  /// selection will be invalid.
-  /// 调用此函数后，[文本]将是空字符串，所选内容将无效。
-  ///
-  /// Calling this will notify all the listeners of this [TextEditingController]
-  /// that they need to update (it calls [notifyListeners]). For this reason,
-  /// this method should only be called between frames, e.g. in response to user
-  /// actions, not during the build, layout, or paint phases.
-  /// 调用此函数将通知此[TextEditingController]的所有侦听器它们需要更新（它调用[notifyListeners]）。
-  /// 因此，此方法只应在帧之间调用，例如响应用户操作，而不应在构建、布局或绘制阶段调用。
-  void clear() {
-    value = TextEditingValue.empty;
-  }
+//   /// Set the [value] to empty.
+//   /// 将[值]设置为空。
+//   ///
+//   /// After calling this function, [text] will be the empty string and the
+//   /// selection will be invalid.
+//   /// 调用此函数后，[文本]将是空字符串，所选内容将无效。
+//   ///
+//   /// Calling this will notify all the listeners of this [TextEditingController]
+//   /// that they need to update (it calls [notifyListeners]). For this reason,
+//   /// this method should only be called between frames, e.g. in response to user
+//   /// actions, not during the build, layout, or paint phases.
+//   /// 调用此函数将通知此[TextEditingController]的所有侦听器它们需要更新（它调用[notifyListeners]）。
+//   /// 因此，此方法只应在帧之间调用，例如响应用户操作，而不应在构建、布局或绘制阶段调用。
+//   void clear() {
+//     value = TextEditingValue.empty;
+//   }
 
-  /// Set the composing region to an empty range.
-  /// 将合成区域设置为空范围。
-  ///
-  /// The composing region is the range of text that is still being composed.
-  /// Calling this function indicates that the user is done composing that
-  /// region.
-  /// 合成区域是仍在合成的文本范围。调用此函数表示用户已完成该区域的组合。
-  ///
-  /// Calling this will notify all the listeners of this [TextEditingController]
-  /// that they need to update (it calls [notifyListeners]). For this reason,
-  /// this method should only be called between frames, e.g. in response to user
-  /// actions, not during the build, layout, or paint phases.
-  /// 调用此函数将通知此[TextEditingController]的所有侦听器它们需要更新（它调用[notifyListeners]）。
-  /// 因此，此方法只应在帧之间调用，例如响应用户操作，而不应在构建、布局或绘制阶段调用。
-  void clearComposing() {
-    value = value.copyWith(composing: TextRange.empty);
-  }
-}
+//   /// Set the composing region to an empty range.
+//   /// 将合成区域设置为空范围。
+//   ///
+//   /// The composing region is the range of text that is still being composed.
+//   /// Calling this function indicates that the user is done composing that
+//   /// region.
+//   /// 合成区域是仍在合成的文本范围。调用此函数表示用户已完成该区域的组合。
+//   ///
+//   /// Calling this will notify all the listeners of this [TextEditingController]
+//   /// that they need to update (it calls [notifyListeners]). For this reason,
+//   /// this method should only be called between frames, e.g. in response to user
+//   /// actions, not during the build, layout, or paint phases.
+//   /// 调用此函数将通知此[TextEditingController]的所有侦听器它们需要更新（它调用[notifyListeners]）。
+//   /// 因此，此方法只应在帧之间调用，例如响应用户操作，而不应在构建、布局或绘制阶段调用。
+//   void clearComposing() {
+//     value = value.copyWith(composing: TextRange.empty);
+//   }
+// }
 
 /// Toolbar configuration for [EditableText].
 /// [EditableText]的工具栏配置。
@@ -307,56 +309,56 @@ class TextEditingController extends ValueNotifier<TextEditingValue> {
 /// option.
 /// [可编辑文本]及其派生的小部件有自己的默认[工具栏选项]。
 /// 如果您想要对工具栏选项进行显式控制，请创建自定义的[ToolbarOptions]。
-class ToolbarOptions {
-  /// Create a toolbar configuration with given options.
-  /// 使用给定的选项创建工具栏配置。
-  ///
-  /// All options default to false if they are not explicitly set.
-  /// 如果未显式设置所有选项，则默认为false。
-  const ToolbarOptions({
-    this.copy = false,
-    this.cut = false,
-    this.paste = false,
-    this.selectAll = false,
-  })  : assert(copy != null),
-        assert(cut != null),
-        assert(paste != null),
-        assert(selectAll != null);
+// class ToolbarOptions {
+//   /// Create a toolbar configuration with given options.
+//   /// 使用给定的选项创建工具栏配置。
+//   ///
+//   /// All options default to false if they are not explicitly set.
+//   /// 如果未显式设置所有选项，则默认为false。
+//   const ToolbarOptions({
+//     this.copy = false,
+//     this.cut = false,
+//     this.paste = false,
+//     this.selectAll = false,
+//   })  : assert(copy != null),
+//         assert(cut != null),
+//         assert(paste != null),
+//         assert(selectAll != null);
 
-  /// Whether to show copy option in toolbar.
-  /// 是否在工具栏中显示复制选项。
-  ///
-  /// Defaults to false. Must not be null.
-  /// 默认为false。不能为空。
-  final bool copy;
+//   /// Whether to show copy option in toolbar.
+//   /// 是否在工具栏中显示复制选项。
+//   ///
+//   /// Defaults to false. Must not be null.
+//   /// 默认为false。不能为空。
+//   final bool copy;
 
-  /// Whether to show cut option in toolbar.
-  /// 是否在工具栏中显示剪切选项。
-  ///
-  /// If [EditableText.readOnly] is set to true, cut will be disabled regardless.
-  /// 如果[EditableText.readOnly]设置为true，则无论如何都将禁用剪切。
-  ///
-  /// Defaults to false. Must not be null.
-  /// 默认为false。不能为空。
-  final bool cut;
+//   /// Whether to show cut option in toolbar.
+//   /// 是否在工具栏中显示剪切选项。
+//   ///
+//   /// If [EditableText.readOnly] is set to true, cut will be disabled regardless.
+//   /// 如果[EditableText.readOnly]设置为true，则无论如何都将禁用剪切。
+//   ///
+//   /// Defaults to false. Must not be null.
+//   /// 默认为false。不能为空。
+//   final bool cut;
 
-  /// Whether to show paste option in toolbar.
-  /// 是否在工具栏中显示粘贴选项。
-  ///
-  /// If [EditableText.readOnly] is set to true, paste will be disabled regardless.
-  /// 如果[EditableText.readOnly]设置为true，粘贴将被禁用。
-  ///
-  /// Defaults to false. Must not be null.
-  /// 默认为false。不能为空。
-  final bool paste;
+//   /// Whether to show paste option in toolbar.
+//   /// 是否在工具栏中显示粘贴选项。
+//   ///
+//   /// If [EditableText.readOnly] is set to true, paste will be disabled regardless.
+//   /// 如果[EditableText.readOnly]设置为true，粘贴将被禁用。
+//   ///
+//   /// Defaults to false. Must not be null.
+//   /// 默认为false。不能为空。
+//   final bool paste;
 
-  /// Whether to show select all option in toolbar.
-  /// 是否在工具栏中显示全选选项。
-  ///
-  /// Defaults to false. Must not be null.
-  /// 默认为false。不能为空。
-  final bool selectAll;
-}
+//   /// Whether to show select all option in toolbar.
+//   /// 是否在工具栏中显示全选选项。
+//   ///
+//   /// Defaults to false. Must not be null.
+//   /// 默认为false。不能为空。
+//   final bool selectAll;
+// }
 
 /// A basic text input field.
 /// 基本文本输入字段。
@@ -439,7 +441,7 @@ class ToolbarOptions {
 ///  * [TextField], which is a full-featured, material-design text input field
 ///    with placeholder text, labels, and [Form] integration.
 ///  * [TextField]，这是一个功能齐全的材料设计文本输入字段，包含占位符文本、标签和[Form]集成。
-class EditableText extends StatefulWidget {
+class CustomEditableText extends StatefulWidget {
   /// Creates a basic text input control.
   /// 创建基本文本输入控件。
   ///
@@ -470,7 +472,7 @@ class EditableText extends StatefulWidget {
   /// [启用交互选择]，[强制线]，[样式]，[光标颜色]，[光标容量动画]，[背景光标颜色]，
   /// [启用建议]，[paintCursorAboveText]，[文本对齐]，[dragStartBehavior]，[滚动填充]，
   /// [dragStartBehavior]，[工具栏选项]、[renderignorespoint]和[只读]参数不能为空。
-  EditableText({
+  CustomEditableText({
     Key key,
     // 控制器
     @required this.controller,
@@ -1468,11 +1470,11 @@ class EditableText extends StatefulWidget {
 /// State for a [EditableText].
 ///
 /// [EditableText] 的状态。
-class EditableTextState extends State<EditableText>
+class CustomEditableTextState extends State<CustomEditableText>
     with
-        AutomaticKeepAliveClientMixin<EditableText>,
+        AutomaticKeepAliveClientMixin<CustomEditableText>,
         WidgetsBindingObserver,
-        TickerProviderStateMixin<EditableText>
+        TickerProviderStateMixin<CustomEditableText>
     implements TextInputClient, TextSelectionDelegate {
   /// 光标计时器
   Timer _cursorTimer;
@@ -1596,7 +1598,7 @@ class EditableTextState extends State<EditableText>
   // 更新Widget
   void didUpdateWidget(
       // 可编辑文本
-      EditableText oldWidget) {
+      CustomEditableText oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.controller != oldWidget.controller) {
       // 移除oldWidget controller 监听

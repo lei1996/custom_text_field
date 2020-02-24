@@ -47,48 +47,48 @@ typedef SelectionChangedHandler = void Function(TextSelection selection,
 /// the cursor location).
 ///
 /// 指示触发选定文本中更改的内容（包括更改光标位置）。
-enum SelectionChangedCause {
-  /// The user tapped on the text and that caused the selection (or the location
-  /// of the cursor) to change.
-  ///
-  /// 用户点击文本，导致选择（或光标位置）改变。
-  tap,
+// enum SelectionChangedCause {
+//   /// The user tapped on the text and that caused the selection (or the location
+//   /// of the cursor) to change.
+//   ///
+//   /// 用户点击文本，导致选择（或光标位置）改变。
+//   tap,
 
-  /// The user tapped twice in quick succession on the text and that caused
-  /// the selection (or the location of the cursor) to change.
-  ///
-  /// 用户连续两次快速点击文本，导致选择（或光标位置）发生变化。
-  doubleTap,
+//   /// The user tapped twice in quick succession on the text and that caused
+//   /// the selection (or the location of the cursor) to change.
+//   ///
+//   /// 用户连续两次快速点击文本，导致选择（或光标位置）发生变化。
+//   doubleTap,
 
-  /// The user long-pressed the text and that caused the selection (or the
-  /// location of the cursor) to change.
-  ///
-  /// 用户长时间按下文本，导致选择（或光标位置）发生更改。
-  longPress,
+//   /// The user long-pressed the text and that caused the selection (or the
+//   /// location of the cursor) to change.
+//   ///
+//   /// 用户长时间按下文本，导致选择（或光标位置）发生更改。
+//   longPress,
 
-  /// The user force-pressed the text and that caused the selection (or the
-  /// location of the cursor) to change.
-  ///
-  /// 用户强制按下文本，导致选择（或光标位置）发生更改。
-  forcePress,
+//   /// The user force-pressed the text and that caused the selection (or the
+//   /// location of the cursor) to change.
+//   ///
+//   /// 用户强制按下文本，导致选择（或光标位置）发生更改。
+//   forcePress,
 
-  /// The user used the keyboard to change the selection or the location of the
-  /// cursor.
-  ///
-  /// 用户使用键盘更改光标的选择或位置。
-  ///
-  /// Keyboard-triggered selection changes may be caused by the IME as well as
-  /// by accessibility tools (e.g. TalkBack on Android).
-  ///
-  /// 键盘触发的选择更改可能是由输入法和辅助工具（如Android上的对讲）引起的。
-  keyboard,
+//   /// The user used the keyboard to change the selection or the location of the
+//   /// cursor.
+//   ///
+//   /// 用户使用键盘更改光标的选择或位置。
+//   ///
+//   /// Keyboard-triggered selection changes may be caused by the IME as well as
+//   /// by accessibility tools (e.g. TalkBack on Android).
+//   ///
+//   /// 键盘触发的选择更改可能是由输入法和辅助工具（如Android上的对讲）引起的。
+//   keyboard,
 
-  /// The user used the mouse to change the selection by dragging over a piece
-  /// of text.
-  ///
-  /// 用户使用鼠标通过在文本上拖动来更改选择。
-  drag,
-}
+//   /// The user used the mouse to change the selection by dragging over a piece
+//   /// of text.
+//   ///
+//   /// 用户使用鼠标通过在文本上拖动来更改选择。
+//   drag,
+// }
 
 /// Signature for the callback that reports when the caret location changes.
 ///
